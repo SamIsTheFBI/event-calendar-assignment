@@ -84,7 +84,7 @@ export function CalendarComponent() {
           <ChevronLeft className="h-4 w-4" />
           <span className="sr-only">Previous</span>
         </Button>
-        <h2 className={cn("text-lg font-bold ", view !== 'month' && 'text-sm')}>
+        <h2 className={cn("text-lg font-bold ", view !== 'month' && 'text-sm sm:text-lg')}>
           {
             view !== 'month' && weekViewHeader
             || monthViewHeader
@@ -220,7 +220,7 @@ export function CalendarComponent() {
     )
 
     return (
-      <div className="mt-4 bg-background px-4 py-2 rounded-lg border border-border h-full overflow-y-auto">
+      <div className="mt-4 bg-background px-4 py-2 rounded-lg border border-border h-fit overflow-y-auto">
         <h3 className="text-lg font-semibold mb-2">
           Events for {format(selectedDate, 'MMMM d, yyyy')}
         </h3>
@@ -256,9 +256,11 @@ export function CalendarComponent() {
 
   return (
     <div className="w-full max-w-7xl flex max-lg:flex-wrap-reverse mx-auto px-4">
-      <div className="sm:max-w-sm w-full px-2 sm:px-4 h-full">
-        {renderSelectedDateEvents()}
-      </div>
+      {view === 'month' &&
+        <div className="sm:max-w-sm w-full px-2 sm:px-4 h-full">
+          {renderSelectedDateEvents()}
+        </div>
+      }
       <div className="max-w-7xl w-full p-2 sm:p-4 relative ">
         <div className="flex justify-end items-center mb-4">
           <Button
@@ -273,6 +275,7 @@ export function CalendarComponent() {
         {renderHeader()}
         {renderDays()}
         {view === 'month' ? renderCells() : renderWeekView()}
+        {view === 'week' && renderSelectedDateEvents()}
         <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
