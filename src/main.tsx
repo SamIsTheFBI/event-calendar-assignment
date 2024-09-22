@@ -4,16 +4,15 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-// import App from './App.tsx'
 import './index.css'
-import HomeRoute from './routes/home';
+// import HomeRoute from './routes/home';
 import EventsRoute from './routes/events';
 import SignupRoute from './routes/sign-up';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomeRoute />,
+    element: <EventsRoute />,
   },
   {
     path: "/events",
