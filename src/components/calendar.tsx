@@ -74,9 +74,9 @@ export function CalendarComponent() {
 
   const renderHeader = () => {
     const dateFormat = view === 'month' ? 'MMMM yyyy' : 'MMM dd, yyyy'
-    let startDate = startOfWeek(currentDate)
-    let weekViewHeader = `${format(startDate, dateFormat)} to ${format(currentDate, dateFormat)}`
-    let monthViewHeader = `${format(currentDate, dateFormat)}`
+    const startDate = startOfWeek(currentDate)
+    const weekViewHeader = `${format(startDate, dateFormat)} to ${format(currentDate, dateFormat)}`
+    const monthViewHeader = `${format(currentDate, dateFormat)}`
 
     return (
       <div className="flex justify-between items-center mb-4">
@@ -101,7 +101,7 @@ export function CalendarComponent() {
   const renderDays = () => {
     const dateFormat = 'EEEEE'
     const days = []
-    let startDate = startOfWeek(currentDate)
+    const startDate = startOfWeek(currentDate)
     for (let i = 0; i < 7; i++) {
       days.push(
         <div key={i} className="text-center font-medium text-xs">
