@@ -8,10 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Pencil, Trash2, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Textarea } from './ui/textarea'
 
 type Event = {
   id: string
   title: string
+  description: string
   start: Date
   end: Date
 }
@@ -21,7 +23,7 @@ export function CalendarComponent() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [view, setView] = useState<'month' | 'week'>('month')
   const [events, setEvents] = useState<Event[]>([])
-  const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '' })
+  const [newEvent, setNewEvent] = useState({ title: '', description: '', start: '', end: '' })
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [isAddEventOpen, setIsAddEventOpen] = useState(false)
 
@@ -49,11 +51,12 @@ export function CalendarComponent() {
       const newEventObj = {
         id: Date.now().toString(),
         title: newEvent.title,
+        description: newEvent.description,
         start: parseISO(newEvent.start),
         end: parseISO(newEvent.end)
       }
       setEvents(prevEvents => [...prevEvents, newEventObj])
-      setNewEvent({ title: '', start: '', end: '' })
+      setNewEvent({ title: '', description: '', start: '', end: '' })
       setIsAddEventOpen(false)
     }
   }
@@ -292,6 +295,14 @@ export function CalendarComponent() {
                 />
               </div>
               <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                />
+              </div>
+              <div>
                 <Label htmlFor="start">Start Date and Time</Label>
                 <Input
                   id="start"
@@ -364,6 +375,7 @@ export function CalendarComponent() {
                 const defaultEnd = setMinutes(setHours(selectedDate, 10), 0)
                 setNewEvent({
                   title: '',
+                  description: '',
                   start: format(defaultStart, "yyyy-MM-dd'T'HH:mm"),
                   end: format(defaultEnd, "yyyy-MM-dd'T'HH:mm")
                 })
@@ -371,6 +383,7 @@ export function CalendarComponent() {
               } else {
                 setNewEvent({
                   title: '',
+                  description: '',
                   start: '',
                   end: ''
                 })
