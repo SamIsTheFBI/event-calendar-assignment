@@ -5,14 +5,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import './index.css'
-// import HomeRoute from './routes/home';
+import HomeRoute from './routes/home';
 import EventsRoute from './routes/events';
 import SignupRoute from './routes/sign-up';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <EventsRoute />,
+    element: <HomeRoute />,
   },
   {
     path: "/events",
