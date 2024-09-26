@@ -101,18 +101,41 @@ export function CalendarComponent() {
     }
   }
 
-  const handleEditEvent = (e: React.FormEvent) => {
+
+  const handleEditEvent = async (e: React.FormEvent) => {
     e.preventDefault()
     if (editingEvent) {
-      setEvents(prevEvents => prevEvents.map(event =>
-        event.id === editingEvent.id ? editingEvent : event
-      ))
+      const res = await fetch(`http://127.0.0.1:8000/api/events/${editingEvent.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editingEvent)
+      })
+
+      if (res.ok) {
+        setEvents(prevEvents => prevEvents.map(event =>
+          event.id === editingEvent.id ? editingEvent : event
+        ))
+      }
       setEditingEvent(null)
     }
   }
 
-  const handleDeleteEvent = (id: string) => {
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== id))
+  const handleDeleteEvent = async (id: string) => {
+    const res = await fetch(`http://127.0.0.1:8000/api/events/${id}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    })
+
+    if (res.ok) {
+      setEvents(prevEvents => prevEvents.filter(event => event.id !== id))
+    } else {
+      console.error('Error in deleting')
+    }
   }
 
   const renderHeader = () => {
