@@ -78,9 +78,9 @@ export function SignupForm() {
       </CardContent>
       <CardFooter className="grid gap-2">
         <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link to={"/sign-up"} className="underline">
-            Sign up
+          Already have an account?{" "}
+          <Link to={"/sign-in"} className="underline">
+            Sign in
           </Link>
         </div>
       </CardFooter>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { format, startOfWeek, addDays, startOfMonth, endOfMonth, endOfWeek, addMonths, addWeeks, isSameMonth, isSameDay, parseISO, setHours, setMinutes } from 'date-fns'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -19,6 +19,30 @@ type Event = {
 }
 
 export function CalendarComponent() {
+  const [loading, setLoading] = useState<Boolean>(true)
+  const [token] = useState<string>(localStorage.getItem('token') || '')
+  if (token as string === '')
+    return <main>Sign in first!</main>
+
+  useEffect(() => {
+    async function getEvents() {
+      setLoading(true)
+      const headers = { 'Authorization': `Bearer ${token}` }
+      const res = await fetch(`http://127.0.0.1:8000/api/events/`, { headers })
+      if (res.ok && !ignore) {
+        let fetch = await res.json()
+        console.log(typeof fetch[0].start)
+        setLoading(false)
+      }
+    }
+
+    let ignore = false
+    getEvents()
+    return () => {
+      ignore = true
+    }
+  }, [token])
+
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [view, setView] = useState<'month' | 'week'>('month')
@@ -256,6 +280,8 @@ export function CalendarComponent() {
       </div>
     )
   }
+
+  if (loading) return <main>Loading...</main>
 
   return (
     <div className="w-full max-w-7xl flex max-lg:flex-wrap-reverse mx-auto px-4">

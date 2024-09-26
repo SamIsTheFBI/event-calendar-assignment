@@ -39,7 +39,7 @@ export function SigninForm() {
       const data: JWTRes = await res.json()
       localStorage.setItem('token', data.access)
       setError('')
-      navigate(`/events/${username}`)
+      navigate('/events/')
     } else {
       setError(res.statusText)
       console.error('Sign in failed', res.statusText)
