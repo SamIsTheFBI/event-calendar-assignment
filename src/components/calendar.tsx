@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Pencil, Trash2, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
+import { env } from '@/env'
 
 type Event = {
   id: string
@@ -28,7 +29,7 @@ export function CalendarComponent() {
     async function getEvents() {
       setLoading(true)
       const headers = { 'Authorization': `Bearer ${token}` }
-      const res = await fetch(`http://127.0.0.1:8000/api/events/`, { headers })
+      const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/events/`, { headers })
       if (res.ok && !ignore) {
         let fetch = await res.json()
         console.log(fetch)
@@ -71,7 +72,7 @@ export function CalendarComponent() {
   }
 
   const saveEvent = async (eventobj: Omit<Event, 'id'>) => {
-    const res = await fetch('http://127.0.0.1:8000/api/events/', {
+    const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/events/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ export function CalendarComponent() {
   const handleEditEvent = async (e: React.FormEvent) => {
     e.preventDefault()
     if (editingEvent) {
-      const res = await fetch(`http://127.0.0.1:8000/api/events/${editingEvent.id}/`, {
+      const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/events/${editingEvent.id}/`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,7 +125,7 @@ export function CalendarComponent() {
   }
 
   const handleDeleteEvent = async (id: string) => {
-    const res = await fetch(`http://127.0.0.1:8000/api/events/${id}/`, {
+    const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/events/${id}/`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
