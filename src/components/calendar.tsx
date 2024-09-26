@@ -20,10 +20,8 @@ type Event = {
 }
 
 export function CalendarComponent() {
-  const [loading, setLoading] = useState<Boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true)
   const [token] = useState<string>(localStorage.getItem('token') || '')
-  if (token as string === '')
-    return <main>Sign in first!</main>
 
   useEffect(() => {
     async function getEvents() {
@@ -31,7 +29,7 @@ export function CalendarComponent() {
       const headers = { 'Authorization': `Bearer ${token}` }
       const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/events/`, { headers })
       if (res.ok && !ignore) {
-        let fetch = await res.json()
+        const fetch = await res.json()
         console.log(fetch)
         setEvents(fetch)
         setLoading(false)
@@ -321,6 +319,7 @@ export function CalendarComponent() {
     )
   }
 
+  if (token as string === '') return <main>Sign in first!</main>
   if (loading) return <main>Loading...</main>
 
   return (

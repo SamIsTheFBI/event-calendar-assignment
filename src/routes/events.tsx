@@ -1,13 +1,4 @@
 import { CalendarComponent } from "@/components/calendar"
-import { useEffect, useState } from "react"
-
-type Event = {
-  id: string
-  title: string
-  description: string
-  start: Date
-  end: Date
-}
 
 export default function EventsRoute() {
   return (
