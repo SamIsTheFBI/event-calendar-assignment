@@ -32,6 +32,7 @@ export function CalendarComponent() {
       if (res.ok && !ignore) {
         let fetch = await res.json()
         console.log(fetch)
+        setEvents(fetch)
         setLoading(false)
       }
     }
