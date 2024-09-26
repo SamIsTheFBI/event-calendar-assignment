@@ -14,8 +14,8 @@ type Event = {
   id: string
   title: string
   description: string
-  start: Date
-  end: Date
+  start_time: Date
+  end_time: Date
 }
 
 export function CalendarComponent() {
@@ -31,7 +31,7 @@ export function CalendarComponent() {
       const res = await fetch(`http://127.0.0.1:8000/api/events/`, { headers })
       if (res.ok && !ignore) {
         let fetch = await res.json()
-        console.log(typeof fetch[0].start)
+        console.log(fetch)
         setLoading(false)
       }
     }
@@ -47,7 +47,7 @@ export function CalendarComponent() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [view, setView] = useState<'month' | 'week'>('month')
   const [events, setEvents] = useState<Event[]>([])
-  const [newEvent, setNewEvent] = useState({ title: '', description: '', start: '', end: '' })
+  const [newEvent, setNewEvent] = useState({ title: '', description: '', start_time: '', end_time: '' })
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [isAddEventOpen, setIsAddEventOpen] = useState(false)
 
@@ -69,18 +69,33 @@ export function CalendarComponent() {
     setSelectedDate(today)
   }
 
+  const saveEvent = async (eventobj: Omit<Event, 'id'>) => {
+    const res = await fetch('http://127.0.0.1:8000/api/events/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(eventobj),
+    })
+
+    if (res.ok) {
+      const savedEvent = await res.json()
+      setEvents(prevEvents => [...prevEvents, savedEvent])
+    }
+  }
+
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newEvent.title && newEvent.start && newEvent.end) {
+    if (newEvent.title && newEvent.start_time && newEvent.end_time) {
       const newEventObj = {
-        id: Date.now().toString(),
         title: newEvent.title,
         description: newEvent.description,
-        start: parseISO(newEvent.start),
-        end: parseISO(newEvent.end)
+        start_time: parseISO(newEvent.start_time),
+        end_time: parseISO(newEvent.end_time)
       }
-      setEvents(prevEvents => [...prevEvents, newEventObj])
-      setNewEvent({ title: '', description: '', start: '', end: '' })
+      saveEvent(newEventObj)
+      setNewEvent({ title: '', description: '', start_time: '', end_time: '' })
       setIsAddEventOpen(false)
     }
   }
@@ -157,8 +172,8 @@ export function CalendarComponent() {
         formattedDate = format(day, dateFormat)
         const cloneDay = day
         const dayEvents = events.filter(event =>
-          isSameDay(day, event.start) || isSameDay(day, event.end) ||
-          (event.start < day && event.end > day)
+          isSameDay(day, event.start_time) || isSameDay(day, event.end_time) ||
+          (event.start_time < day && event.end_time > day)
         )
         days.push(
           <div
@@ -204,8 +219,8 @@ export function CalendarComponent() {
     let day = startDate
     while (day <= endDate) {
       const dayEvents = events.filter(event =>
-        isSameDay(day, event.start) || isSameDay(day, event.end) ||
-        (event.start < day && event.end > day)
+        isSameDay(day, event.start_time) || isSameDay(day, event.end_time) ||
+        (event.start_time < day && event.end_time > day)
       )
       const cloneDay = day
       rows.push(
@@ -226,7 +241,7 @@ export function CalendarComponent() {
               <div key={event.id} className="max-sm:hidden text-xs bg-blue-200 p-1">
                 <span>{event.title}</span>
                 <div className="text-[10px] text-gray-600">
-                  {format(event.start, 'HH:mm')} - {format(event.end, 'HH:mm')}
+                  {format(event.start_time, 'HH:mm')} - {format(event.end_time, 'HH:mm')}
                 </div>
               </div>
             ))}
@@ -242,8 +257,8 @@ export function CalendarComponent() {
     if (!selectedDate) return null
 
     const selectedDateEvents = events.filter(event =>
-      isSameDay(selectedDate, event.start) || isSameDay(selectedDate, event.end) ||
-      (event.start < selectedDate && event.end > selectedDate)
+      isSameDay(selectedDate, event.start_time) || isSameDay(selectedDate, event.end_time) ||
+      (event.start_time < selectedDate && event.end_time > selectedDate)
     )
 
     return (
@@ -271,7 +286,7 @@ export function CalendarComponent() {
                   </div>
                 </div>
                 <div className="text-sm text-gray-600">
-                  {format(event.start, 'h:mm a')} - {format(event.end, 'h:mm a')}
+                  {format(event.start_time, 'h:mm a')} - {format(event.end_time, 'h:mm a')}
                 </div>
               </li>
             ))}
@@ -333,8 +348,8 @@ export function CalendarComponent() {
                 <Input
                   id="start"
                   type="datetime-local"
-                  value={newEvent.start}
-                  onChange={(e) => setNewEvent({ ...newEvent, start: e.target.value })}
+                  value={newEvent.start_time}
+                  onChange={(e) => setNewEvent({ ...newEvent, start_time: e.target.value })}
                   required
                 />
               </div>
@@ -343,8 +358,8 @@ export function CalendarComponent() {
                 <Input
                   id="end"
                   type="datetime-local"
-                  value={newEvent.end}
-                  onChange={(e) => setNewEvent({ ...newEvent, end: e.target.value })}
+                  value={newEvent.end_time}
+                  onChange={(e) => setNewEvent({ ...newEvent, end_time: e.target.value })}
                   required
                 />
               </div>
@@ -373,8 +388,8 @@ export function CalendarComponent() {
                   <Input
                     id="edit-start"
                     type="datetime-local"
-                    value={format(editingEvent.start, "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, start: parseISO(e.target.value) })}
+                    value={format(editingEvent.start_time, "yyyy-MM-dd'T'HH:mm")}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, start_time: parseISO(e.target.value) })}
                     required
                   />
                 </div>
@@ -383,8 +398,8 @@ export function CalendarComponent() {
                   <Input
                     id="edit-end"
                     type="datetime-local"
-                    value={format(editingEvent.end, "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, end: parseISO(e.target.value) })}
+                    value={format(editingEvent.end_time, "yyyy-MM-dd'T'HH:mm")}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, end_time: parseISO(e.target.value) })}
                     required
                   />
                 </div>
@@ -402,16 +417,16 @@ export function CalendarComponent() {
                 setNewEvent({
                   title: '',
                   description: '',
-                  start: format(defaultStart, "yyyy-MM-dd'T'HH:mm"),
-                  end: format(defaultEnd, "yyyy-MM-dd'T'HH:mm")
+                  start_time: format(defaultStart, "yyyy-MM-dd'T'HH:mm"),
+                  end_time: format(defaultEnd, "yyyy-MM-dd'T'HH:mm")
                 })
                 setIsAddEventOpen(true)
               } else {
                 setNewEvent({
                   title: '',
                   description: '',
-                  start: '',
-                  end: ''
+                  start_time: '',
+                  end_time: ''
                 })
                 setIsAddEventOpen(true)
               }
