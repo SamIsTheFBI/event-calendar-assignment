@@ -24,12 +24,12 @@ A web app implementation of event calendar app.
   ```bash
   uv venv
   source .venv/bin/activate # For Linux machines
+  cd django-backend
   uv pip install -r requirements.txt
   ```
 - Start the Django backend:
 
   ```bash
-  cd django-backend
   python manage.py migrate events
   python manage.py migrate
   python manage.py runserver
