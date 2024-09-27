@@ -408,6 +408,14 @@ export function CalendarComponent() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={editingEvent.description}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
+                  />
+                </div>
+                <div>
                   <Label htmlFor="edit-start">Start Date and Time</Label>
                   <Input
                     id="edit-start"
