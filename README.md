@@ -38,7 +38,7 @@ A web app implementation of event calendar app.
 
   ```bash
   cd - # go to root directory
-  echo "VITE_BACKEND_HOST_URL=http://127.0.0.1:8000" > .env
+  cp .env.demo .env
   bun install
   bun dev
   ```

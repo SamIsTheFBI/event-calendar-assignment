@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
 import { Credentials, JWTRes } from "./types"
 import { useState } from "react"
+import { env } from "@/env"
 
 export function SigninForm() {
   const [username, setUsername] = useState<string>('')
@@ -26,7 +27,7 @@ export function SigninForm() {
       password: password,
     }
 
-    const res = await fetch(`http://127.0.0.1:8000/api/token/`, {
+    const res = await fetch(`${env.VITE_BACKEND_HOST_URL}/api/token/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
