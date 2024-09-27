@@ -206,9 +206,9 @@ export function CalendarComponent() {
             ${selectedDate && isSameDay(day, selectedDate) ? 'max-sm:outline max-sm:outline-primary max-sm:outline-2 sm:border-primary sm:border-2' : 'border-0'}`}
             onClick={() => onDateClick(cloneDay)}
           >
-            <div className={cn("text-sm font-bold text-center sm:text-right w-full sm:pr-1 overflow-y-clip", isSameDay(day, new Date()) && 'text-white')}>
+            <div className={cn("text-sm font-bold text-center sm:text-right w-full sm:pr-1", isSameDay(day, new Date()) && 'text-white')}>
               {formattedDate}
-              <span className={cn("sm:hidden", dayEvents.length && 'block relative bottom-2' || 'hidden')}>
+              <span className={cn("sm:hidden", dayEvents.length && 'absolute -bottom-1 translate-x-1/2 left-3' || 'hidden')}>
                 •
               </span>
             </div>
