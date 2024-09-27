@@ -43,4 +43,4 @@ A web app implementation of event calendar app.
   bun dev
   ```
 
-Demo: [Live URL](https://event-calendar-assignment.vercel.app/) (does not include authentication)
+Demo: [Live URL](https://event-calendar-assignment.vercel.app/)
